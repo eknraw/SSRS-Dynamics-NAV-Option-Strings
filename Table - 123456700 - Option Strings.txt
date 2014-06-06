@@ -1,0 +1,37 @@
+OBJECT Table 123456700 Option Strings
+{
+  OBJECT-PROPERTIES
+  {
+    Date=09/01/09;
+    Time=12:00:00 AM;
+    Modified=Yes;
+    Version List=BW1.00;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;TableNo             ;Integer        }
+    { 2   ;   ;No.                 ;Integer        }
+    { 3   ;   ;TableName           ;Text30         }
+    { 4   ;   ;FieldName           ;Text30         }
+    { 5   ;   ;FieldInteger        ;Integer        }
+    { 6   ;   ;Field Caption       ;Text50         }
+    { 7   ;   ;OptionString        ;Text250        }
+  }
+  KEYS
+  {
+    {    ;TableNo,No.,FieldInteger                ;Clustered=Yes }
+  }
+  CODE
+  {
+
+    BEGIN
+    {
+      BW1.00 - Bill Warnke - bill@billwarnke.com
+    }
+    END.
+  }
+}
+

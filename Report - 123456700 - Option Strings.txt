@@ -1,0 +1,164 @@
+OBJECT Report 123456700 Load Option Strings
+{
+  OBJECT-PROPERTIES
+  {
+    Date=09/01/09;
+    Time=12:00:00 AM;
+    Modified=Yes;
+    Version List=BW1.00;
+  }
+  PROPERTIES
+  {
+  }
+  DATAITEMS
+  {
+    { PROPERTIES
+      {
+        DataItemTable=Table2000000041;
+        DataItemTableView=SORTING(TableNo,No.)
+                          WHERE(Type=CONST(Option),
+                                TableNo=FILTER(<2000000000));
+        OnPreDataItem=BEGIN
+
+                        grecOptionValues.DELETEALL;
+                      END;
+
+        OnAfterGetRecord=BEGIN
+
+                           CLEAR(grecOptionValues);
+                           CLEAR(gtxtString);
+                           CLEAR(gtxtoutString);
+                           CLEAR(gintSQLVal);
+
+                           grecOptionValues.TableNo := TableNo;
+                           grecOptionValues."No." := "No.";
+                           grecOptionValues.TableName := TableName;
+                           grecOptionValues.FieldName := FieldName;
+                           grecOptionValues."Field Caption" := "Field Caption";
+
+                           //Get the option string
+                           gtxtString := gfunOptionValues(TableNo,"No.");
+
+                           //Send copy to report output
+                           gtxtoutString := gtxtString;
+
+                           //Loop through full option string and assign each value to incrementing SQL value
+
+                           WHILE STRLEN(gtxtString) <> 0 DO BEGIN
+
+                             gintoptionLength := STRPOS(gtxtString,',');
+                             IF gintoptionLength = 0 THEN
+                               BEGIN
+                                 gtxtOptionValue := gtxtString;
+                                 gtxtString := DELSTR(gtxtString,1,STRLEN(gtxtString));
+                               END
+                             ELSE
+                               BEGIN
+                                 gtxtOptionValue := COPYSTR(gtxtString,1,gintoptionLength);
+                                 gtxtOptionValue := DELCHR(gtxtOptionValue,'=',',');
+                                 IF gtxtOptionValue = ' ' THEN
+                                   gtxtOptionValue := '';
+                                 gtxtString := DELSTR(gtxtString,1,gintoptionLength);
+                               END;
+
+                             grecOptionValues.OptionString := gtxtOptionValue;
+                             grecOptionValues.FieldInteger := gintSQLVal;
+                             grecOptionValues.INSERT;
+                             gintSQLVal += 1;
+                           END;
+                         END;
+
+      }
+      SECTIONS
+      {
+        { PROPERTIES
+          {
+            SectionType=Header;
+            SectionWidth=20100;
+            SectionHeight=423;
+          }
+          CONTROLS
+          {
+            { 1000000027;Label  ;0    ;0    ;1800 ;423  ;ParentControl=1000000026;
+                                                         HorzAlign=Right;
+                                                         VertAlign=Bottom;
+                                                         FontBold=Yes;
+                                                         MultiLine=Yes }
+            { 1000000029;Label  ;1950 ;0    ;1050 ;423  ;ParentControl=1000000028;
+                                                         HorzAlign=Right;
+                                                         VertAlign=Bottom;
+                                                         FontBold=Yes;
+                                                         MultiLine=Yes }
+            { 1000000031;Label  ;3300 ;0    ;1500 ;423  ;ParentControl=1000000030;
+                                                         VertAlign=Bottom;
+                                                         FontBold=Yes;
+                                                         MultiLine=Yes }
+            { 1000000033;Label  ;5400 ;0    ;1200 ;423  ;ParentControl=1000000032;
+                                                         VertAlign=Bottom;
+                                                         FontBold=Yes;
+                                                         MultiLine=Yes }
+          }
+           }
+        { PROPERTIES
+          {
+            SectionType=Body;
+            SectionWidth=20100;
+            SectionHeight=423;
+          }
+          CONTROLS
+          {
+            { 1000000026;TextBox;0    ;0    ;1800 ;423  ;SourceExpr=TableNo }
+            { 1000000028;TextBox;1950 ;0    ;1050 ;423  ;SourceExpr="No." }
+            { 1000000030;TextBox;3300 ;0    ;1650 ;423  ;SourceExpr=TableName }
+            { 1000000032;TextBox;5400 ;0    ;1200 ;423  ;SourceExpr=Type }
+            { 1000000001;TextBox;7200 ;0    ;12600;423  ;SourceExpr=gtxtoutString }
+          }
+           }
+      }
+       }
+  }
+  REQUESTFORM
+  {
+    PROPERTIES
+    {
+      Width=9020;
+      Height=3410;
+    }
+    CONTROLS
+    {
+    }
+  }
+  CODE
+  {
+    VAR
+      grecOptionValues@1000000000 : Record 123456700;
+      gtxtString@1000000001 : Text[1024];
+      gtxtoutString@1000000003 : Text[1024];
+      gtxtOptionValue@1000000006 : Text[250];
+      gintSQLVal@1000000002 : Integer;
+      gintoptionLength@1000000004 : Integer;
+      gintoptionLengthTotal@1000000005 : Integer;
+
+    PROCEDURE gfunOptionValues@1000000003(TableNum@1000000000 : Integer;FieldNum@1000000001 : Integer) : Text[1024];
+    VAR
+      lrecordRef@1000000002 : RecordRef;
+      lfieldRef@1000000003 : FieldRef;
+      loptionString@1000000004 : Text[1024];
+    BEGIN
+      CLEAR(loptionString);
+      CLEAR(lfieldRef);
+      lrecordRef.OPEN(TableNum);
+      lfieldRef := lrecordRef.FIELD(FieldNum);
+      loptionString := lfieldRef.OPTIONSTRING;
+      lrecordRef.CLOSE;
+      EXIT(loptionString);
+    END;
+
+    BEGIN
+    {
+      BW1.00 - Bill Warnke - bill@billwarnke.com
+    }
+    END.
+  }
+}
+

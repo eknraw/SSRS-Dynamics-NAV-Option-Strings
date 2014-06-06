@@ -1,4 +1,3 @@
-NAV-2009-Option-Strings-SSRS
-============================
+Created by Bill Warnke - bill@billwarnke.com
 
-www.billwarnke.com
+http://www.billwarnke.com
