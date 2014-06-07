@@ -2,10 +2,10 @@ OBJECT Table 123456700 Option Strings
 {
   OBJECT-PROPERTIES
   {
-    Date=09/01/09;
-    Time=12:00:00 AM;
+    Date=06/06/14;
+    Time=[ 8:18:25 PM];
     Modified=Yes;
-    Version List=BW1.00;
+    Version List=BW2.00;
   }
   PROPERTIES
   {
@@ -24,12 +24,15 @@ OBJECT Table 123456700 Option Strings
   {
     {    ;TableNo,No.,FieldInteger                ;Clustered=Yes }
   }
+  FIELDGROUPS
+  {
+  }
   CODE
   {
 
     BEGIN
     {
-      BW1.00 - Bill Warnke - bill@billwarnke.com
+      BW2.00 - Bill Warnke - bill@billwarnke.com
     }
     END.
   }
